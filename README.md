@@ -1,2 +1,2 @@
 # A3_RGB_Filters.
-This repo for the Bonus Tasks in A3 (RGB Filters).
+This repo for the Bonus Task in A3 (RGB Filters).
