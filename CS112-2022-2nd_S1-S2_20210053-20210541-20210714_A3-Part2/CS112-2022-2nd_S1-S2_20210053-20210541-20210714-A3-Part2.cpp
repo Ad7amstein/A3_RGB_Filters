@@ -26,11 +26,13 @@
 
 using namespace std;
 unsigned char image [SIZE][SIZE][RGB];
+unsigned char image2[SIZE][SIZE][RGB];
 
 void loadImage ();
 void saveImage ();
 void selection_menu();
 void BW_Image ();
+void BW_merger();
 
 int main(){
 
@@ -39,7 +41,7 @@ int main(){
 }
 //_________________________________________
 void selection_menu(){
-  int filter=1;
+  char filter='1';
 
   while (filter != 0)
   {
@@ -55,33 +57,31 @@ void selection_menu(){
   	     <<"0.exit.\n";
   	cin >> filter;
 
-  	if (filter == 1 )
+  	if (filter == '1' )
   		BW_Image();
-  	else if (filter == 2 )
+  	else if (filter == '2' )
   		;
-  	else if (filter == 3 )
+  	else if (filter == '3' )
   	    ;
-  	else if (filter == 4 )
+  	else if (filter == '4' )
   	    ;
-  	else if (filter == 5 )
+  	else if (filter == '5' )
   	    ;
-  	else if (filter == 6 )
+  	else if (filter == '6' )
   	    ;
-    else if (filter == 7 )
+    else if (filter == '7' )
         ;
-    else if (filter == 8 )
+    else if (filter == '8' )
         ;
-    else if (filter == 9 )
+    else if (filter == '9' )
         ;
-    else if (filter == 'a' ){
-        cout << "Tmam.\n";
-        break;
-    }
-    else if (filter == 98 )
+    else if (filter == 'a' )
         ;
-    else if (filter == 99 )
+    else if (filter == 'b' )
         ;
-  	else if (filter == 0 ){
+    else if (filter == 'c' )
+        ;
+  	else if (filter == '0' ){
   		cout << "M3 elsalamh ya user ya habibi \n"  ;
   		break;
   	}
@@ -141,6 +141,26 @@ void BW_Image(){
   }
 }
 
+void BW_merger() {
+    char imageFileName2[100];
+    // Get colored image file name
+    cout << "Enter the source image file name: ";
+    cin >> imageFileName2;
+
+    // Add to it .bmp extension and load image
+    strcat (imageFileName2, ".bmp");
+    readRGBBMP(imageFileName2, image2);
+
+
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j< SIZE; j++) {
+                for (int k=0;k<RGB; k++) {
+            image[i][j][k] = 0.5*( image[i][j][k] + image2[i][j][k] );
+                }
+        }
+    }
+
+}
 
 
 
