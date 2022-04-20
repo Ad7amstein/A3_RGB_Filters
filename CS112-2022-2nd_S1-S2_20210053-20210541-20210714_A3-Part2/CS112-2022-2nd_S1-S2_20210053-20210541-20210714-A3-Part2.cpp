@@ -35,13 +35,18 @@ unsigned char newimage4[SIZE/4][SIZE/4][RGB];
 
 void loadImage ();
 void saveImage ();
+void saveImage2 ();
 void selection_menu();
 void BW_Image ();
 void RGB_merger();
 void RGB_blur();
 void RGB_shrink();
 void RGB_darkenlight();
-
+void Invert_Filter();
+void Rotate_Image();
+void Enlarge_Image();
+void the_order (int& a , int& b  ,char q);
+void Shuffle_Filter();
 int main(){
 
     selection_menu();
@@ -68,7 +73,7 @@ void selection_menu(){
         if (filter == '1' )
             BW_Image();
         else if (filter == '2' )
-            ;
+            Invert_Filter();
         else if (filter == '3' ){
             RGB_merger();
             saveImage();
@@ -76,26 +81,29 @@ void selection_menu(){
         else if (filter == '4' )
             ;
         else if (filter == '5' )
-            ;
+            Rotate_Image() ;
         else if (filter == '6' )
             RGB_darkenlight();
         else if (filter == '7' )
             ;
         else if (filter == '8' )
-            ;
+            Enlarge_Image() ;
         else if (filter == '9' )
             RGB_shrink();
         else if (filter == 'a' )
             ;
         else if (filter == 'b' )
-            ;
+           Shuffle_Filter() ;
         else if (filter == 'c' )
             RGB_blur();
         else if (filter == '0' ){
             cout << "M3 elsalamh ya user ya habibi \n"  ;
             break;
         }
-        saveImage();
+       if ((filter == '7')||(filter == '8')||(filter == 'b'))
+            continue;
+        else
+            saveImage();
 
     }
 }
@@ -123,6 +131,19 @@ void saveImage () {
     // Add to it .bmp extension and load image
     strcat (imageFileName, ".bmp");
     writeRGBBMP(imageFileName, image);
+}
+//_________________________________________
+
+void saveImage2 () {
+    char imageFileName[100];
+
+    // Get gray scale image target file name
+    cout << "Enter the target image file name: ";
+    cin >> imageFileName;
+
+    // Add to it .bmp extension and load image
+    strcat (imageFileName, ".bmp");
+    writeRGBBMP(imageFileName, image2);
 }
 //_________________________________________
 void BW_Image(){
@@ -265,4 +286,197 @@ void RGB_darkenlight() {
     }
 
 }
+void Invert_Filter()
+{
 
+	for (int i = 0; i < SIZE; i++)//Invert image
+	    	{
+					for (int j = 0; j< SIZE; j++)
+					{
+						for (int x = 0 ; x < 3 ; x++ )
+							image[i][j][x] = 256 - image[i][j][x*2];
+
+					}
+
+	      	}
+}
+void Rotate_Image()
+
+
+{
+	char choose ;
+	cout <<  "choose the degree of rotate please : "<< endl;
+	cout << "a.90"<<endl<<"b.180"<<endl<<"c.270"<<endl;
+	cin >> choose ;
+	if (choose == 'a' )//Rotate 90
+		{
+			for (int i = 0; i < SIZE; i++)
+    		{
+				for (int j = 0; j< SIZE; j++)
+				{
+					for (int k = 0 ; k < 3 ; k ++)
+						image[i][j][k] =  image[j-(340)][i-(96)][2*k-1];
+
+
+				}
+
+      		}
+		}
+	else if (choose == 'b') //Rotate 180
+		{
+			for (int i = 0; i < SIZE; i++)
+    		{
+				for (int j = 0; j< SIZE; j++)
+				{
+					for (int x = 0 ; x < 3 ; x++ )
+						image[i][j][x] =  image[i-(340)][-j-96][2*x-1];
+
+
+
+
+				}
+
+      		}
+		}
+		else if (choose == 'c')  //Rotate 270
+		{
+			for (int i = 0; i < SIZE; i++)
+			{
+				for (int j = 0; j< SIZE; j++)
+				{
+					for (int x = 0 ; x < 3 ; x++ )
+
+						image[i][j][x] =  image[-j-86][-i-96][2*x-1];
+				}
+		  	}
+
+		}
+
+}
+void Enlarge_Image()
+{
+    char choice ;
+    cout << "please enter the number of the quarter to enlarge(1,2,3,4) :";
+    cin >> choice ;
+   // first quarter
+  if (choice == '1')
+  {
+      for (int i = 0 , x = 0  ; i< SIZE; x++ , i+=2)
+	{ for (int j = 0 ,y = 0  ;j< SIZE; y++ , j +=2)
+		{
+		    for (int k = 0 ; k < 7 ; k+=2)
+               {
+                    image2[i][j][k]=  image[x][y][k];
+                    image2[i+1][j][k] = image[x][y][k];
+                    image2[i][j+1][k] = image[x][y][k];
+                    image2[i+1][j+1][k] = image[x][y][k];
+               }
+		}
+    }
+  }
+
+  // second quarter
+  else if (choice == '2')
+  {
+      for (int i = 0 , x = 0  ; i< SIZE; x++ , i+=2)
+	{ for (int j = 0 ,y = 128  ;j< SIZE; y++ , j +=2)
+		for (int k = 0 ; k < 7 ; k+=2)
+               {
+                    image2[i][j][k]=  image[x][y][k];
+                    image2[i+1][j][k] = image[x][y][k];
+                    image2[i][j+1][k] = image[x][y][k];
+                    image2[i+1][j+1][k] = image[x][y][k];
+               }
+    }
+  }
+
+
+
+    // third quarter
+  else if (choice == '3')
+  {
+      for (int i = 0 , x = 128  ; i< SIZE; x++ , i+=2)
+	{ for (int j = 0 ,y = 0  ;j< SIZE; y++ , j +=2)
+		for (int k = 0 ; k < 7 ; k+=2)
+               {
+                    image2[i][j][k]=  image[x][y][k];
+                    image2[i+1][j][k] = image[x][y][k];
+                    image2[i][j+1][k] = image[x][y][k];
+                    image2[i+1][j+1][k] = image[x][y][k];
+               }
+    }
+  }
+
+    // forth quarter
+    else if (choice == '4')
+    {
+       for (int i = 0 , x = 128 ; i< SIZE; x++ , i+=2)
+        { for (int j = 0 ,y = 128  ;j< SIZE; y++ , j +=2)
+            for (int k = 0 ; k < 7 ; k+=2)
+               {
+                    image2[i][j][k]=  image[x][y][k];
+                    image2[i+1][j][k] = image[x][y][k];
+                    image2[i][j+1][k] = image[x][y][k];
+                    image2[i+1][j+1][k] = image[x][y][k];
+               }
+        }
+    }
+ saveImage2 ();
+}
+void the_order (int& a , int& b  ,char q)
+{
+        if (q == '1')
+        a = 0 , b = 0 ;
+    else if (q == '2')
+        a = 0 , b = 128;
+    else if (q == '3')
+        a = 128 , b = 0 ;
+    else if (q == '4')
+        a = 128 , b = 128 ;
+
+}
+//_____________________________________________________
+void Shuffle_Filter()
+{
+    char q1 , q2 ,q3 ,q4 ;
+    int a = 0 , b = 0 ;
+    cout << "what is the order wold you like : ";
+    cin  >> q1 >> q2 >> q3 >> q4 ;
+//--------------------
+
+    the_order(a,b,q1);//chose the number of the first quarter
+	for (int i = 0  , x = a; i < SIZE/2; x++ , i++)//wright the first quarter
+        {
+            for (int j =0 , y = b ; j< SIZE/2 ; y++ , j++)
+                for (int k = 0 ; k < 6 ; k +=2)
+							(image2[i][j][k]=image[x][y][k]);
+        }
+//--------------------
+    the_order(a,b,q2);//chose the number of the first quarter
+	for (int i = 0  , x = a; i < SIZE/2; x++ , i++)//wright the first quarter
+        {
+            for (int j =128 , y = b ; j< SIZE ; y++ , j++)
+                        for (int k = 0 ; k < 6 ; k +=2)
+							(image2[i][j][k]=image[x][y][k]);
+        }
+//--------------------
+
+    the_order(a,b,q3);//chose the number of the third quarter
+	for (int i = 128  , x = a; i < SIZE; x++ , i++)//wright the third quarter
+        {
+            for (int j =0 , y = b ; j< SIZE/2 ; y++ , j++)
+                    for (int k = 0 ; k < 6 ; k +=2)
+							(image2[i][j][k]=image[x][y][k]);
+        }
+//--------------------
+
+    the_order(a,b,q4);//chose the number of the forth quarter
+	for (int i = 128  , x = a; i < SIZE; x++ , i++)//wright the forth quarter
+        {
+            for (int j =128 , y = b ; j< SIZE ; y++ , j++)
+                    for (int k = 0 ; k < 6 ; k +=2)
+							(image2[i][j][k]=image[x][y][k]);
+        }
+//_________________________________________________________
+    saveImage2 ();
+}
