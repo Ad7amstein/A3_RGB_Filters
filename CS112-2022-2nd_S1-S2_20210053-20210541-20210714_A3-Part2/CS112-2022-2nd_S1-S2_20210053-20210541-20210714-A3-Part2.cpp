@@ -1,7 +1,6 @@
-
 /***************************************************************
- Purpose: Invert and rotate (90,180,270) RGB images.
-
+ Purpose: Invert, rotate (90,180,270), Flip, Merge, Enlarge,
+ Shuffle, Shrink, Blur, Darken&lighten, Detect Edges, Black&White RGB images.
  Program load a RGB image and store in another file, then give the user an option of
  12 functions to choose from that all work on RGB images.
 
@@ -14,11 +13,11 @@
  Author3:  Selsabeel Asim Ali Elbagir
  ID: 20210714
 
-
  Section: S1 & S2
  Date:    20 April 2022
  Version: 1.0
 ****************************************************************/
+//include libraries to use
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -26,18 +25,22 @@
 #include "bmplib.cpp"
 
 using namespace std;
+//initialize image to work on it
 unsigned char image [SIZE][SIZE][RGB];
 unsigned char image2 [SIZE][SIZE][RGB];
 unsigned char newimage2 [SIZE/2][SIZE/2][RGB];
 unsigned char newimage3[SIZE/3][SIZE/3][RGB];
 unsigned char newimage4[SIZE/4][SIZE/4][RGB];
 
-
+//Functions that work on images
 void loadImage ();
 void saveImage ();
 void saveImage2 ();
 void selection_menu();
 void BW_Image ();
+void RGB_Flip ();
+void RGB_EdgeDetective ();
+void RGB_Mirror ();
 void RGB_merger();
 void RGB_blur();
 void RGB_shrink();
@@ -47,6 +50,7 @@ void Rotate_Image();
 void Enlarge_Image();
 void the_order (int& a , int& b  ,char q);
 void Shuffle_Filter();
+
 int main(){
 
     selection_menu();
@@ -59,7 +63,7 @@ void selection_menu(){
     while (filter != '0')
     {
         loadImage();
-
+        //display the selection minu
         cout <<"Please select a filter to apply or 0 to exit:" << endl;
         cout << "1.Black & White Image.\n" << "2.Invert Image.\n"
              << "3.Merge Images.\n"        << "4.Flip Image.\n"
@@ -69,37 +73,37 @@ void selection_menu(){
              << "b.Shuffle Image.\n"       << "c.Blur Image.\n"
              <<"0.exit.\n";
         cin >> filter;
-
+        //check the filter that the user input it
         if (filter == '1' )
             BW_Image();
         else if (filter == '2' )
             Invert_Filter();
-        else if (filter == '3' ){
+        else if (filter == '3' )
             RGB_merger();
-            saveImage();
-            break;}
         else if (filter == '4' )
-            ;
+            RGB_Flip();
         else if (filter == '5' )
             Rotate_Image() ;
         else if (filter == '6' )
             RGB_darkenlight();
         else if (filter == '7' )
-            ;
+            RGB_EdgeDetective();
         else if (filter == '8' )
             Enlarge_Image() ;
         else if (filter == '9' )
             RGB_shrink();
         else if (filter == 'a' )
-            ;
+            RGB_Mirror();
         else if (filter == 'b' )
            Shuffle_Filter() ;
         else if (filter == 'c' )
             RGB_blur();
+        //if the user input 0 then end the program
         else if (filter == '0' ){
             cout << "M3 elsalamh ya user ya habibi \n"  ;
             break;
         }
+        //if the user input filter 7,8,b then continue without save the image
        if ((filter == '7')||(filter == '8')||(filter == 'b'))
             continue;
         else
@@ -109,11 +113,12 @@ void selection_menu(){
 }
 
 //_________________________________________
+//function reads the image that user inputs it
 void loadImage () {
     char imageFileName[100];
 
     // Get gray scale image file name
-    cout << "Enter the source image file name: ";
+    cout << "Ahlan ya user ya habibi \n""Please enter file name of the image to process \n";
     cin >> imageFileName;
 
     // Add to it .bmp extension and load image
@@ -121,6 +126,7 @@ void loadImage () {
     readRGBBMP(imageFileName, image);
 }
 //_________________________________________
+//function saves the changes in the image
 void saveImage () {
     char imageFileName[100];
 
@@ -133,7 +139,7 @@ void saveImage () {
     writeRGBBMP(imageFileName, image);
 }
 //_________________________________________
-
+//function saves the changes in a new image
 void saveImage2 () {
     char imageFileName[100];
 
@@ -171,7 +177,7 @@ void BW_Image(){
         }
     }
 }
-
+//_____________________________________________________
 void RGB_merger() {
     char imageFileName2[100];
     // Get colored image file name
@@ -190,8 +196,8 @@ void RGB_merger() {
             }
         }
     }
-
 }
+//_____________________________________________________
 void RGB_shrink() {
     int choice;
     cout << "Would you like to shrink the image by a factor of 2, 3, or 4?\n";
@@ -246,7 +252,7 @@ void RGB_shrink() {
         }
     }
 }
-
+//_____________________________________________________
 void RGB_blur() {
     for (int i = 1; i < SIZE-1; i++) {
         for (int j = 1; j < SIZE-1; j++) {
@@ -257,7 +263,7 @@ void RGB_blur() {
         }
     }
 }
-
+//_____________________________________________________
 void RGB_darkenlight() {
     char choice;
     cout << "Do you want to (d)arken or (l)ighten?";
@@ -286,6 +292,7 @@ void RGB_darkenlight() {
     }
 
 }
+//_____________________________________________________
 void Invert_Filter()
 {
 
@@ -300,8 +307,8 @@ void Invert_Filter()
 
 	      	}
 }
+//_____________________________________________________
 void Rotate_Image()
-
 
 {
 	char choose ;
@@ -316,10 +323,7 @@ void Rotate_Image()
 				{
 					for (int k = 0 ; k < 3 ; k ++)
 						image[i][j][k] =  image[j-(340)][i-(96)][2*k-1];
-
-
 				}
-
       		}
 		}
 	else if (choose == 'b') //Rotate 180
@@ -330,12 +334,7 @@ void Rotate_Image()
 				{
 					for (int x = 0 ; x < 3 ; x++ )
 						image[i][j][x] =  image[i-(340)][-j-96][2*x-1];
-
-
-
-
 				}
-
       		}
 		}
 		else if (choose == 'c')  //Rotate 270
@@ -353,6 +352,7 @@ void Rotate_Image()
 		}
 
 }
+//_____________________________________________________
 void Enlarge_Image()
 {
     char choice ;
@@ -379,31 +379,30 @@ void Enlarge_Image()
   else if (choice == '2')
   {
       for (int i = 0 , x = 0  ; i< SIZE; x++ , i+=2)
-	{ for (int j = 0 ,y = 128  ;j< SIZE; y++ , j +=2)
-		for (int k = 0 ; k < 7 ; k+=2)
-               {
-                    image2[i][j][k]=  image[x][y][k];
-                    image2[i+1][j][k] = image[x][y][k];
-                    image2[i][j+1][k] = image[x][y][k];
-                    image2[i+1][j+1][k] = image[x][y][k];
-               }
-    }
+	  {
+	    for (int j = 0 ,y = 128  ;j< SIZE; y++ , j +=2)
+		  for (int k = 0 ; k < 7 ; k+=2)
+          {
+                image2[i][j][k]=  image[x][y][k];
+                image2[i+1][j][k] = image[x][y][k];
+                image2[i][j+1][k] = image[x][y][k];
+                image2[i+1][j+1][k] = image[x][y][k];
+          }
+      }
   }
-
-
-
     // third quarter
   else if (choice == '3')
   {
       for (int i = 0 , x = 128  ; i< SIZE; x++ , i+=2)
-	{ for (int j = 0 ,y = 0  ;j< SIZE; y++ , j +=2)
-		for (int k = 0 ; k < 7 ; k+=2)
-               {
-                    image2[i][j][k]=  image[x][y][k];
-                    image2[i+1][j][k] = image[x][y][k];
-                    image2[i][j+1][k] = image[x][y][k];
-                    image2[i+1][j+1][k] = image[x][y][k];
-               }
+	  {
+        for (int j = 0 ,y = 0  ;j< SIZE; y++ , j +=2)
+		  for (int k = 0 ; k < 7 ; k+=2)
+          {
+                image2[i][j][k]=  image[x][y][k];
+                image2[i+1][j][k] = image[x][y][k];
+                image2[i][j+1][k] = image[x][y][k];
+                image2[i+1][j+1][k] = image[x][y][k];
+          }
     }
   }
 
@@ -411,14 +410,15 @@ void Enlarge_Image()
     else if (choice == '4')
     {
        for (int i = 0 , x = 128 ; i< SIZE; x++ , i+=2)
-        { for (int j = 0 ,y = 128  ;j< SIZE; y++ , j +=2)
-            for (int k = 0 ; k < 7 ; k+=2)
-               {
-                    image2[i][j][k]=  image[x][y][k];
-                    image2[i+1][j][k] = image[x][y][k];
-                    image2[i][j+1][k] = image[x][y][k];
-                    image2[i+1][j+1][k] = image[x][y][k];
-               }
+       {
+            for (int j = 0 ,y = 128  ;j< SIZE; y++ , j +=2)
+              for (int k = 0 ; k < 7 ; k+=2)
+              {
+                 image2[i][j][k]=  image[x][y][k];
+                 image2[i+1][j][k] = image[x][y][k];
+                 image2[i][j+1][k] = image[x][y][k];
+                 image2[i+1][j+1][k] = image[x][y][k];
+              }
         }
     }
  saveImage2 ();
@@ -477,6 +477,123 @@ void Shuffle_Filter()
                     for (int k = 0 ; k < 6 ; k +=2)
 							(image2[i][j][k]=image[x][y][k]);
         }
-//_________________________________________________________
     saveImage2 ();
+}
+//_________________________________________________________
+void RGB_Flip (){
+    cout << "Flip (h)orizontally or (v)ertically ? " << endl;
+    char option;
+    cin >> option;
+    if(option == 'h'){
+      for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j< (SIZE/2); j++){
+          for(int k = 0; k < RGB; k++)
+            swap(image[i][j][k] , image[i][SIZE - j][k]);
+        }
+      }
+    }
+    else if(option == 'v'){
+      for (int i = 0; i < (SIZE/2); i++){
+        for (int j = 0; j < SIZE; j++){
+          for(int k = 0; k < RGB; k++)
+            swap(image[i][j][k] , image[SIZE - i][j][k]);
+        }
+      }
+    }
+}
+//_________________________________________________________
+void RGB_EdgeDetective(){
+  long sum = 0;
+  double avg = 0;
+  for (int i = 0; i < SIZE; i++){
+    for (int j = 0; j < SIZE; j++){
+      for(int n = 0; n < RGB; n++){
+        sum += image[i][j][n];
+      }
+      avg = sum / RGB;
+      if(avg > 128){
+        for(int m = 0; m < RGB; m++){
+          image[i][j][m] = 255;
+        }
+      }
+      else{
+        for(int m = 0; m < RGB; m++){
+          image[i][j][m] = 0;
+        }
+      }
+    sum = 0;
+    avg = 0;
+    }
+  }
+  for(int i = 0; i < SIZE; i++){
+    for(int j = 0; j < (SIZE - 1); j++){
+      if(image[i][j][0] == 255){
+        if(image[i][j][0] != image[i][j + 1][0]){
+          for(int k = 0; k < RGB; k++){
+            image2[i][j][k] = 255;
+            image2[i][j + 1][k] = 0;
+          }
+          j += 1;
+        }
+        else if(image[i][j][0] == image[i][j + 1][0])
+            for(int k = 0; k < RGB; k++){
+              image2[i][j][k] = 255;
+            }
+      }
+      else if(image[i][j][0] == 0){
+        if((image[i][j][0] == image[i][j + 1][0]) && (image[i][j][0] == image[i - 1][j][0]) && (image[i][j][0] == image[i + 1][j][0])){
+            for(int k = 0; k < RGB; k++){
+              image2[i][j][k] = 255;
+            }
+        }
+        else
+          for(int k = 0; k < RGB; k++){
+            image2[i][j][k] = 0;
+          }
+      }
+    }
+  }
+  saveImage2();
+}
+//_____________________________________________________
+void RGB_Mirror(){
+  cout << "Mirror (l)eft, (r)ight, (u)pper, (d)own side?" << endl;
+  char option;
+  cin >> option;
+  if(option == 'l'){
+    for (int i = 0; i < (SIZE); i++){
+      for (int j = 0; j < SIZE/2; j++){
+        for(int k = 0; k < RGB; k++){
+            image[i][j][k] = image[i][SIZE - j][k];
+        }
+      }
+    }
+  }
+  else if(option == 'r'){
+    for (int i = 0; i < (SIZE); i++) {
+      for (int j = 0; j< SIZE/2; j++) {
+        for(int k = 0; k < RGB; k++){
+          image[i][SIZE - j][k] = image[i][j][k];
+        }
+      }
+    }
+  }
+  else if(option == 'u'){
+    for (int i = 0; i < (SIZE/2); i++) {
+      for (int j = 0; j< SIZE; j++) {
+        for(int k = 0; k < RGB; k++){
+          image[i][j][k] = image[SIZE - i][j][k];
+        }
+      }
+    }
+  }
+  else if(option == 'd'){
+    for (int i = 0; i < (SIZE/2); i++) {
+      for (int j = 0; j< SIZE; j++) {
+        for(int k = 0; k < RGB; k++){
+          image[SIZE - i][j][k] = image[i][j][k];
+        }
+      }
+    }
+  }
 }
