@@ -2,7 +2,7 @@
  Purpose: Invert, rotate (90,180,270), Flip, Merge, Enlarge,
  Shuffle, Shrink(1/2 dimension,1/3 dimension, 1/4 dimension), Blur, Darken&lighten, Detect Edges, Black&White RGB images.
  The program loads a RGB image, gives the user an option of
- 12 functions, each that gives a different filter effect, and then saves it 
+ 12 functions, each that gives a different filter effect, and then saves it
  to a new image (in the same program's file directory) that the user chooses the name of.
 
  Author1:  Abdullah Mohammed Abdullah Farg
@@ -190,7 +190,7 @@ void RGB_merger() {
     readRGBBMP(imageFileName2, image2);
 
 // since we need two images for merge to occur, we ask the user to input a file name and then read the filename.bmp
-	
+
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j< SIZE; j++) {
             for (int k=0;k<RGB; k++) { //loop through the image pixel by pixel
@@ -287,7 +287,7 @@ void RGB_darkenlight() {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j< SIZE; j++) {
                 for(int k=0;k<RGB;k++) { // loops through the entire image pixel by pixel
-                    image[i][j][k] = 0.5*(image[i][j][k]+SIZE); 
+                    image[i][j][k] = 0.5*(image[i][j][k]+SIZE);
 			// taking the average of the value of each pixel with white (255/SIZE) to make it closer to 255 (white)
 			// we can't multiply by 2 because that would give a value greater than 255 at times.
 
@@ -310,7 +310,7 @@ void Invert_Filter()
 					for (int j = 0; j< SIZE; j++)
 					{
 						for (int x = 0 ; x < 3 ; x++ )
-							image[i][j][x] = 256 - image[i][j][x*2];
+							image[i][j][x] = 256 - image[i][j][x*2];//Invert image
 
 					}
 
@@ -324,25 +324,25 @@ void Rotate_Image()
 	cout <<  "choose the degree of rotate please : "<< endl;
 	cout << "a.90"<<endl<<"b.180"<<endl<<"c.270"<<endl;
 	cin >> choose ;
-	if (choose == 'a' )//Rotate 90
+	if (choose == 'a' )     //Rotate 90
 		{
 			for (int i = 0; i < SIZE; i++)
     		{
 				for (int j = 0; j< SIZE; j++)
 				{
 					for (int k = 0 ; k < 3 ; k ++)
-						image[i][j][k] =  image[j-(340)][i-(96)][2*k-1];
+						image[i][j][k] =  image[j-(340)][i-(96)][2*k-1];    //Rotate 90
 				}
       		}
 		}
-	else if (choose == 'b') //Rotate 180
+	else if (choose == 'b')     //Rotate 180
 		{
 			for (int i = 0; i < SIZE; i++)
     		{
 				for (int j = 0; j< SIZE; j++)
 				{
 					for (int x = 0 ; x < 3 ; x++ )
-						image[i][j][x] =  image[i-(340)][-j-96][2*x-1];
+						image[i][j][x] =  image[i-(340)][-j-96][2*x-1];     //Rotate 180
 				}
       		}
 		}
@@ -354,7 +354,7 @@ void Rotate_Image()
 				{
 					for (int x = 0 ; x < 3 ; x++ )
 
-						image[i][j][x] =  image[-j-86][-i-96][2*x-1];
+						image[i][j][x] =  image[-j-86][-i-96][2*x-1];       //Rotate 270
 				}
 		  	}
 
@@ -368,13 +368,14 @@ void Enlarge_Image()
     cout << "please enter the number of the quarter to enlarge(1,2,3,4) :";
     cin >> choice ;
    // first quarter
-  if (choice == '1')
+  if (choice == '1')    // if the user choose first quarter to enlarge
   {
       for (int i = 0 , x = 0  ; i< SIZE; x++ , i+=2)
 	{ for (int j = 0 ,y = 0  ;j< SIZE; y++ , j +=2)
 		{
 		    for (int k = 0 ; k < 7 ; k+=2)
                {
+                   //copy every pixel in first quarter in  four pixels to enlarge it
                     image2[i][j][k]=  image[x][y][k];
                     image2[i+1][j][k] = image[x][y][k];
                     image2[i][j+1][k] = image[x][y][k];
@@ -385,13 +386,14 @@ void Enlarge_Image()
   }
 
   // second quarter
-  else if (choice == '2')
+  else if (choice == '2')   // if the user choose second quarter to enlarge
   {
       for (int i = 0 , x = 0  ; i< SIZE; x++ , i+=2)
 	  {
 	    for (int j = 0 ,y = 128  ;j< SIZE; y++ , j +=2)
 		  for (int k = 0 ; k < 7 ; k+=2)
           {
+              //copy every pixel in second quarter in  four pixels to enlarge it
                 image2[i][j][k]=  image[x][y][k];
                 image2[i+1][j][k] = image[x][y][k];
                 image2[i][j+1][k] = image[x][y][k];
@@ -400,13 +402,14 @@ void Enlarge_Image()
       }
   }
     // third quarter
-  else if (choice == '3')
+  else if (choice == '3')       // if the user choose third quarter to enlarge
   {
       for (int i = 0 , x = 128  ; i< SIZE; x++ , i+=2)
 	  {
         for (int j = 0 ,y = 0  ;j< SIZE; y++ , j +=2)
 		  for (int k = 0 ; k < 7 ; k+=2)
           {
+              //copy every pixel in third quarter in  four pixels to enlarge it
                 image2[i][j][k]=  image[x][y][k];
                 image2[i+1][j][k] = image[x][y][k];
                 image2[i][j+1][k] = image[x][y][k];
@@ -416,13 +419,15 @@ void Enlarge_Image()
   }
 
     // forth quarter
-    else if (choice == '4')
+    else if (choice == '4')     // if the user choose forth quarter to enlarge
     {
        for (int i = 0 , x = 128 ; i< SIZE; x++ , i+=2)
        {
             for (int j = 0 ,y = 128  ;j< SIZE; y++ , j +=2)
               for (int k = 0 ; k < 7 ; k+=2)
               {
+                  //copy every pixel in forth quarter in  four pixels to enlarge it
+
                  image2[i][j][k]=  image[x][y][k];
                  image2[i+1][j][k] = image[x][y][k];
                  image2[i][j+1][k] = image[x][y][k];
@@ -432,21 +437,29 @@ void Enlarge_Image()
     }
  saveImage2 ();
 }
+//_________________________________________
 void the_order (int& a , int& b  ,char q)
 {
+    /*
+    this function take number of the quarter of image1 from the user
+        and return the start of loop to take this quarter and insert it
+        in the new image (image2)
+    */
         if (q == '1')
-        a = 0 , b = 0 ;
+        a = 0 , b = 0 ;     //the start of loop
     else if (q == '2')
-        a = 0 , b = 128;
+        a = 0 , b = 128;    //the start of loop
     else if (q == '3')
-        a = 128 , b = 0 ;
+        a = 128 , b = 0 ;   //the start of loop
     else if (q == '4')
-        a = 128 , b = 128 ;
+        a = 128 , b = 128 ; //the start of loop
+
 
 }
 //_____________________________________________________
 void Shuffle_Filter()
 {
+    //  take the order of the quarters form the user
     char q1 , q2 ,q3 ,q4 ;
     int a = 0 , b = 0 ;
     cout << "what is the order wold you like : ";
