@@ -1,8 +1,9 @@
 /***************************************************************
  Purpose: Invert, rotate (90,180,270), Flip, Merge, Enlarge,
- Shuffle, Shrink, Blur, Darken&lighten, Detect Edges, Black&White RGB images.
- Program load a RGB image and store in another file, then give the user an option of
- 12 functions to choose from that all work on RGB images.
+ Shuffle, Shrink(1/2 dimension,1/3 dimension, 1/4 dimension), Blur, Darken&lighten, Detect Edges, Black&White RGB images.
+ The program loads a RGB image, gives the user an option of
+ 12 functions, each that gives a different filter effect, and then saves it 
+ to a new image (in the same program's file directory) that the user chooses the name of.
 
  Author1:  Abdullah Mohammed Abdullah Farg
  ID: 20210541
@@ -14,8 +15,8 @@
  ID: 20210714
 
  Section: S1 & S2
- Date:    20 April 2022
- Version: 1.0
+ Date:    22 April 2022
+ Version: 2.0
 ****************************************************************/
 //include libraries to use
 #include <iostream>
@@ -28,9 +29,9 @@ using namespace std;
 //initialize image to work on it
 unsigned char image [SIZE][SIZE][RGB];
 unsigned char image2 [SIZE][SIZE][RGB];
-unsigned char newimage2 [SIZE/2][SIZE/2][RGB];
-unsigned char newimage3[SIZE/3][SIZE/3][RGB];
-unsigned char newimage4[SIZE/4][SIZE/4][RGB];
+unsigned char newimage2 [SIZE/2][SIZE/2][RGB]; //initializing an image for the shrink (1/2 dimension) filter
+unsigned char newimage3[86][86][RGB]; //initializing an image for the shrink (1/3 dimension) filter
+unsigned char newimage4[SIZE/4][SIZE/4][RGB]; //initializing an image for the shrink (1/4 dimension) filter
 
 //Functions that work on images
 void loadImage ();
@@ -58,7 +59,7 @@ int main(){
 }
 //_________________________________________
 void selection_menu(){
-    char filter='1';
+    char filter='1'; // this ensures the selection menu loops continually
 
     while (filter != '0')
     {
@@ -188,11 +189,13 @@ void RGB_merger() {
     strcat (imageFileName2, ".bmp");
     readRGBBMP(imageFileName2, image2);
 
-
+// since we need two images for merge to occur, we ask the user to input a file name and then read the filename.bmp
+	
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j< SIZE; j++) {
-            for (int k=0;k<RGB; k++) {
+            for (int k=0;k<RGB; k++) { //loop through the image pixel by pixel
                 image[i][j][k] = (image[i][j][k] + image2[i][j][k])/2;
+		    // this takes the average of both images
             }
         }
     }
@@ -212,15 +215,15 @@ void RGB_shrink() {
         int x=0,y=0,z=0;
         for (int i = 0; i < SIZE; i+=choice) {
             for (int j = 0; j < SIZE; j+=choice) {
-                for (int k=0;k<RGB;k++) {
+                for (int k=0;k<RGB;k++) { // this loops through the entire image pixel by pixel
                     if (choice == 2) {
-                        newimage2[x][y][z] = image[i][j][k];
+                        newimage2[x][y][z] = image[i][j][k]; //saves the original image to an image half the original size
                     }
                     if (choice == 3) {
-                        newimage3[x][y][z] = image[i][j][k];
+                        newimage3[x][y][z] = image[i][j][k]; //saves the original image to an image one third the original size
                     }
                     if (choice == 4) {
-                        newimage4[x][y][z] = image[i][j][k];
+                        newimage4[x][y][z] = image[i][j][k]; //saves the original image to an image a quarter the original size
                     }
                     z++;
                 }
@@ -229,22 +232,22 @@ void RGB_shrink() {
 
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                for (int k=0; k<RGB; k++) {
-                    image[i][j][k] = 255;
+                for (int k=0; k<RGB; k++) { // this loops through the entire image pixel by pixel
+                    image[i][j][k] = 255; // makes the original image all white so that we can overwrite the smaller image on top of it
                 }
             }
         }
         for (int i = 0; i < SIZE/choice; i++) {
             for (int j = 0; j < SIZE/choice; j++) {
-                for (int k=0;k<RGB; k++) {
+                for (int k=0;k<RGB; k++) { // this loops through the entire image pixel by pixel
                     if (choice==2){
-                        image[i][j][k] = newimage2[i][j][k];
+                        image[i][j][k] = newimage2[i][j][k]; //overwriting the smaller image on top
                     }
                     if (choice==3){
-                        image[i][j][k] = newimage3[i][j][k];
+                        image[i][j][k] = newimage3[i][j][k]; // also overwriting here but for 1/3 dimension
                     }
                     if (choice==4){
-                        image[i][j][k] = newimage4[i][j][k];
+                        image[i][j][k] = newimage4[i][j][k]; // also overwriting here but for 1/4 dimension
                     }
 
                 }
@@ -256,9 +259,10 @@ void RGB_shrink() {
 void RGB_blur() {
     for (int i = 1; i < SIZE-1; i++) {
         for (int j = 1; j < SIZE-1; j++) {
-            for (int k=0; k<RGB;k++) { // we don't change k in this loop since we don't want to change/blur the  colors of the image
+            for (int k=0; k<RGB;k++) { // this loops through the entire image pixel by pixel
                 image[i][j][k] = ( image[i][j][k] + image[i][j+1][k] + image[i][j-1][k] + image[i+1][j][k] +image[i+1][j+1][k] +
                                    + image[i+1][j-1][k] + image[i-1][j][k] + image[i-1][j+1][k] + image[i-1][j-1][k] ) / 9;
+		    // we don't average k in this loop since we don't want to change/blur the  colors of the image
             }
         }
     }
@@ -266,13 +270,14 @@ void RGB_blur() {
 //_____________________________________________________
 void RGB_darkenlight() {
     char choice;
-    cout << "Do you want to (d)arken or (l)ighten?";
+    cout << "Do you want to (d)arken or (l)ighten?\n";
+    cout << "Please enter d or l.\n";
     cin >> choice;
     if (choice=='d'){
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j< SIZE; j++) {
-                for (int k=0;k<RGB;k++) {
-                    image[i][j][k] *= 0.5;
+                for (int k=0;k<RGB;k++) { // loops through the entire image pixel by pixel
+                    image[i][j][k] *= 0.5; // halving the value of each pixel to make it closer to 0 (black)
                 }
             }
         }
@@ -280,8 +285,9 @@ void RGB_darkenlight() {
     else if (choice=='l'){
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j< SIZE; j++) {
-                for(int k=0;k<RGB;k++) {
-                    image[i][j][k] = 0.5*(image[i][j][k]+SIZE);
+                for(int k=0;k<RGB;k++) { // loops through the entire image pixel by pixel
+                    image[i][j][k] = 0.5*(image[i][j][k]+SIZE); 
+			// taking the average of the value of each pixel with white (255/SIZE) to make it closer to 255 (white)
                 }
             }
 
