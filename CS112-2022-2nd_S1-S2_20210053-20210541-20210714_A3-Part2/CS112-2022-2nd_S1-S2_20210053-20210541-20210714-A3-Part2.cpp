@@ -262,6 +262,7 @@ void RGB_blur() {
             for (int k=0; k<RGB;k++) { // this loops through the entire image pixel by pixel
                 image[i][j][k] = ( image[i][j][k] + image[i][j+1][k] + image[i][j-1][k] + image[i+1][j][k] +image[i+1][j+1][k] +
                                    + image[i+1][j-1][k] + image[i-1][j][k] + image[i-1][j+1][k] + image[i-1][j-1][k] ) / 9;
+		    // takes the average of all the 9 pixels around the pixel itself, including the pixel itself
 		    // we don't average k in this loop since we don't want to change/blur the  colors of the image
             }
         }
@@ -288,6 +289,8 @@ void RGB_darkenlight() {
                 for(int k=0;k<RGB;k++) { // loops through the entire image pixel by pixel
                     image[i][j][k] = 0.5*(image[i][j][k]+SIZE); 
 			// taking the average of the value of each pixel with white (255/SIZE) to make it closer to 255 (white)
+			// we can't multiply by 2 because that would give a value greater than 255 at times.
+
                 }
             }
 
