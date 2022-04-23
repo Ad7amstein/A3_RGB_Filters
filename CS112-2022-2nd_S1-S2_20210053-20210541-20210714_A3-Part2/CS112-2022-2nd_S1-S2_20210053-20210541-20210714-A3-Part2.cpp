@@ -156,23 +156,27 @@ void saveImage2 () {
 void BW_Image(){
     long sum = 0;
     double avg = 0;
-
+    //loop through all the pixels in the image
     for (int i = 0; i < SIZE; i++){
         for (int j = 0; j < SIZE; j++){
             for(int n = 0; n < RGB; n++){
-                sum += image[i][j][n];
+                sum += image[i][j][n];  //sum all the values in each pixel
             }
-            avg = sum / RGB;
+            avg = sum / RGB;  //calc the average of the RGB in each pixel
+            //check the value of the average for each pixel
             if(avg > 128){
+                //loop through RGB in each pixel
                 for(int m = 0; m < RGB; m++){
-                    image[i][j][m] = 255;
+                    image[i][j][m] = 255;  //turn the pixel to white
                 }
             }
             else{
+                //loop through RGB in each pixel
                 for(int m = 0; m < RGB; m++){
-                    image[i][j][m] = 0;
+                    image[i][j][m] = 0;  //turn the pixel to white
                 }
             }
+            //initialize it for the new pixel
             sum = 0;
             avg = 0;
         }
@@ -503,22 +507,26 @@ void Shuffle_Filter()
 }
 //_________________________________________________________
 void RGB_Flip (){
+    //display and take options
     cout << "Flip (h)orizontally or (v)ertically ? " << endl;
     char option;
     cin >> option;
+    //make changes according to the choice
     if(option == 'h'){
+      //loop through the half of the image
       for (int i = 0; i < SIZE; i++){
         for (int j = 0; j< (SIZE/2); j++){
           for(int k = 0; k < RGB; k++)
-            swap(image[i][j][k] , image[i][SIZE - j][k]);
+            swap(image[i][j][k] , image[i][SIZE - j][k]); //swap the pixels
         }
       }
     }
     else if(option == 'v'){
+      //loop through the half of the image
       for (int i = 0; i < (SIZE/2); i++){
         for (int j = 0; j < SIZE; j++){
           for(int k = 0; k < RGB; k++)
-            swap(image[i][j][k] , image[SIZE - i][j][k]);
+            swap(image[i][j][k] , image[SIZE - i][j][k]); //swap pixels
         }
       }
     }
@@ -527,50 +535,40 @@ void RGB_Flip (){
 void RGB_EdgeDetective(){
   long sum = 0;
   double avg = 0;
-  for (int i = 0; i < SIZE; i++){
-    for (int j = 0; j < SIZE; j++){
-      for(int n = 0; n < RGB; n++){
-        sum += image[i][j][n];
-      }
-      avg = sum / RGB;
-      if(avg > 128){
-        for(int m = 0; m < RGB; m++){
-          image[i][j][m] = 255;
-        }
-      }
-      else{
-        for(int m = 0; m < RGB; m++){
-          image[i][j][m] = 0;
-        }
-      }
-    sum = 0;
-    avg = 0;
-    }
-  }
+  //Turn the image to Black & white
+  BW_Image();
+
+  //loop through the image pixel by pixel and make changes
   for(int i = 0; i < SIZE; i++){
     for(int j = 0; j < (SIZE - 1); j++){
+      //check if the pixel is white & not equal the next pixel
       if(image[i][j][0] == 255){
         if(image[i][j][0] != image[i][j + 1][0]){
-          for(int k = 0; k < RGB; k++){
+        //loop through the RGB in the pixel and turn it in image to white, in image2 to Black
+        for(int k = 0; k < RGB; k++){
             image2[i][j][k] = 255;
             image2[i][j + 1][k] = 0;
           }
           j += 1;
         }
+        //check if the pixel is equal to the next one
         else if(image[i][j][0] == image[i][j + 1][0])
             for(int k = 0; k < RGB; k++){
-              image2[i][j][k] = 255;
+              image2[i][j][k] = 255; //turn the RGB in the pixel to white
             }
       }
+      //chek if the pixel is Black
       else if(image[i][j][0] == 0){
+        //chek if the pixel equal to the nighbours
         if((image[i][j][0] == image[i][j + 1][0]) && (image[i][j][0] == image[i - 1][j][0]) && (image[i][j][0] == image[i + 1][j][0])){
             for(int k = 0; k < RGB; k++){
-              image2[i][j][k] = 255;
+              image2[i][j][k] = 255; //turn the RGB in the pixel to white
             }
         }
+        //check if the pixel not equal to any nighbour pixel
         else
           for(int k = 0; k < RGB; k++){
-            image2[i][j][k] = 0;
+            image2[i][j][k] = 0; //turn pixel to Black
           }
       }
     }
@@ -579,41 +577,47 @@ void RGB_EdgeDetective(){
 }
 //_____________________________________________________
 void RGB_Mirror(){
+  //display and take the options
   cout << "Mirror (l)eft, (r)ight, (u)pper, (d)own side?" << endl;
   char option;
   cin >> option;
+  //make changes according to the optoin
   if(option == 'l'){
+    //loop through the half of the image
     for (int i = 0; i < (SIZE); i++){
       for (int j = 0; j < SIZE/2; j++){
         for(int k = 0; k < RGB; k++){
-            image[i][j][k] = image[i][SIZE - j][k];
+            image[i][j][k] = image[i][SIZE - j][k]; //mirror the pixel to another one
         }
       }
     }
   }
   else if(option == 'r'){
+    //loop through the half of the image
     for (int i = 0; i < (SIZE); i++) {
       for (int j = 0; j< SIZE/2; j++) {
         for(int k = 0; k < RGB; k++){
-          image[i][SIZE - j][k] = image[i][j][k];
+          image[i][SIZE - j][k] = image[i][j][k]; //mirror the pixel to another one
         }
       }
     }
   }
   else if(option == 'u'){
+    //loop through the half of the image
     for (int i = 0; i < (SIZE/2); i++) {
       for (int j = 0; j< SIZE; j++) {
         for(int k = 0; k < RGB; k++){
-          image[i][j][k] = image[SIZE - i][j][k];
+          image[i][j][k] = image[SIZE - i][j][k]; //mirror the pixel to another one
         }
       }
     }
   }
   else if(option == 'd'){
+    //loop through the half of the image
     for (int i = 0; i < (SIZE/2); i++) {
       for (int j = 0; j< SIZE; j++) {
         for(int k = 0; k < RGB; k++){
-          image[SIZE - i][j][k] = image[i][j][k];
+          image[SIZE - i][j][k] = image[i][j][k]; //mirror the pixel to another one
         }
       }
     }
